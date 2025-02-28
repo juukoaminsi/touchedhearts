@@ -1,1 +1,29 @@
+name: Compile Sass
 
+on:
+  push:
+    branches:
+      - main  # Change this if your default branch has a different name
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Sass
+        run: npm install -g sass
+
+      - name: Compile Sass to CSS
+        run: sass styles.scss css/styles.css
+
+      - name: Commit and push compiled CSS
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add css/styles.css
+          git commit -m "Auto-compile Sass to CSS"
+          git push
+        continue-on-error: true  # Avoids failure if no changes are detected
